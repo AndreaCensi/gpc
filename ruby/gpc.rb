@@ -92,12 +92,17 @@ module GPC
 		ptot = p7 - p_lambda * p_lambda
 
 		r = ptot.roots
-		lambda = 0
+		lambda = 0; set = false;
 		## Find greatest real root
 		for i in 0..3
 			root = r[i]
 			next if root.im!=0 
-			lambda = [lambda, root.real].max
+			if not set
+				lambda = root.real
+				set = true;
+			else
+				lambda = [lambda, root.real].max
+			end
 		end
 
 		if DEBUG
