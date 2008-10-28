@@ -124,15 +124,15 @@ int gpc_solve_valid(int K, const struct gpc_corr*c, int*valid, double *x_out) {
 	M(m2t,1,2);	M(m2,2,1);
 	M(m3t,1,2);	M(m3,2,1);
 
-	// m1t = g1t*mAi*mB
+	/* m1t = g1t*mAi*mB */
 	m_mult(g1t,mAi,temp12);
 	m_mult(temp12,mB,m1t);
 
 	m_trans(m1t,m1);
-	// m2t = m1t*mSa
+	/* m2t = m1t*mSa */
 	m_mult(m1t,mSa,m2t);
 	m_trans(m2t,m2);
-	// m3t = g2t*mSa
+	/* m3t = g2t*mSa */
 	m_mult(g2t,mSa,m3t);
 	m_trans(m3t,m3);
 	
