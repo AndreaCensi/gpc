@@ -16,6 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+cmake_minimum_required(VERSION 2.6)
+
 PROJECT (gpc C)
 
 	INCLUDE (FindGSL.cmake)                                                                                         
@@ -36,8 +38,8 @@ PROJECT (gpc C)
 ADD_LIBRARY(gpc STATIC gpc.c gpc_utils.c)
 TARGET_LINK_LIBRARIES(gpc ${GSL_LIBRARIES})
 
-#ADD_EXECUTABLE(gpc_test gpc_test.c)
-#TARGET_LINK_LIBRARIES(gpc_test gpc ${GSL_LIBRARIES})
+ADD_EXECUTABLE(gpc_test gpc_test.c)
+TARGET_LINK_LIBRARIES(gpc_test gpc ${GSL_LIBRARIES})
 
 INSTALL(TARGETS gpc ARCHIVE DESTINATION lib)
 INSTALL(FILES gpc.h DESTINATION include)

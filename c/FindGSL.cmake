@@ -19,30 +19,64 @@
 ## www.mip.informatik.uni-kiel.de
 ## --------------------------------
 
-IF(WIN32)
-  MESSAGE(SEND_ERROR "FindGSL.cmake: gnu scientific library GSL not (yet) supported on WIN32")
-  
-ELSE(WIN32)
-  IF(UNIX) 
-  SET(GSL_CONFIG_PREFER_PATH "$ENV{GSL_HOME}/bin" CACHE STRING "preferred path to OpenSG (osg-config)")
-    FIND_PROGRAM(GSL_CONFIG gsl-config
+ IF(WIN32 AND NOT CYGWIN)
+ MESSAGE(STATUS, "Finding GSL using the WIN32 code.")
+  FIND_LIBRARY(GSL_gsl_LIBRARY
+      NAMES gsl
+      PATHS "$ENV{GSL_HOME}/lib"
+      DOC "Where can the GSL (gsl.lib) library be found"
+      )
+  FIND_LIBRARY(GSL_cblas_LIBRARY
+      NAMES cblas
+      PATHS "$ENV{GSL_HOME}/lib"
+      DOC "Where can the GSL (cblas.lib) library be found"
+      )
+  SET(GSL_LIBRARIES "${GSL_cblas_LIBRARY} ${GSL_gsl_LIBRARY}")
+
+  FIND_PATH(GSL_INCLUDE_DIR gsl/gsl_linalg.h
+      $ENV{GSL_HOME}/include
+      )
+
+  IF(GSL_INCLUDE_DIR AND GSL_LIBRARIES)
+    SET(GSL_FOUND TRUE)
+  ELSE(GSL_INCLUDE_DIR AND GSL_LIBRARIES)
+    SET(GSL_FOUND FALSE) 
+  ENDIF(GSL_INCLUDE_DIR AND GSL_LIBRARIES)
+
+  MARK_AS_ADVANCED(
+    GSL_gsl_LIBRARY
+    GSL_cblas_LIBRARY
+    GSL_INCLUDE_DIR
+    GSL_LIBRARIES
+    GSL_LINK_DIRECTORIES
+  )  
+ELSE(WIN32 AND NOT CYGWIN)
+   MESSAGE("gsl home: $ENV{GSL_HOME}")
+#  IF(UNIX) 
+  SET(GSL_CONFIG_PREFER_PATH "$ENV{GSL_HOME}/bin" CACHE STRING "preferred path to GSL (gsl-config)")
+  IF(NOT GSL_CONFIG) 
+   FIND_PROGRAM(GSL_CONFIG gsl-config
       ${GSL_CONFIG_PREFER_PATH}
       /usr/bin/
       )
-    # MESSAGE("DBG GSL_CONFIG ${GSL_CONFIG}")
+   ENDIF(NOT GSL_CONFIG)
+
+   MESSAGE("DBG GSL_CONFIG ${GSL_CONFIG}")
     
     IF (GSL_CONFIG) 
       # set CXXFLAGS to be fed into CXX_FLAGS by the user:
-      SET(GSL_CXX_FLAGS "`${GSL_CONFIG} --cflags`")
-      
+     #  SET(GSL_CXX_FLAGS "`${GSL_CONFIG} --cflags`")
+      EXEC_PROGRAM(${GSL_CONFIG} ARGS --cflags OUTPUT_VARIABLE GSL_CXX_FLAGS)
+	
       # set INCLUDE_DIRS to prefix+include
       EXEC_PROGRAM(${GSL_CONFIG}
 	ARGS --prefix
 	OUTPUT_VARIABLE GSL_PREFIX)
       SET(GSL_INCLUDE_DIR ${GSL_PREFIX}/include CACHE STRING INTERNAL)
-
+	  
       # set link libraries and link flags
-      SET(GSL_LIBRARIES "`${GSL_CONFIG} --libs`")
+      # SET(GSL_LIBRARIES "`${GSL_CONFIG} --libs`")
+      EXEC_PROGRAM(${GSL_CONFIG} ARGS --libs OUTPUT_VARIABLE GSL_LIBRARIES)
       
       ## extract link dirs for rpath  
       EXEC_PROGRAM(${GSL_CONFIG}
@@ -78,11 +112,11 @@ ELSE(WIN32)
       MESSAGE(STATUS "Using GSL from ${GSL_PREFIX}")
       
     ELSE(GSL_CONFIG)
-      MESSAGE("FindGSL.cmake: gsl-config not found. Please set it manually. GSL_CONFIG=${GSL_CONFIG}")
+      MESSAGE(FATAL_ERROR, "FindGSL.cmake: gsl-config not found. Please set it manually. GSL_CONFIG=${GSL_CONFIG}")
     ENDIF(GSL_CONFIG)
 
-  ENDIF(UNIX)
-ENDIF(WIN32)
+#  ENDIF(UNIX)
+ENDIF(WIN32 AND NOT CYGWIN)
 
 
 IF(GSL_LIBRARIES)
