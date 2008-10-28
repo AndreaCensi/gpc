@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT (gpc C)
 
-	INCLUDE (FindGSL.cmake)                                                                                         
+	INCLUDE (FindGSL.cmake) 
 
 	IF(GSL_FOUND)
 		MESSAGE(STATUS "Found GSL:")
@@ -34,6 +34,8 @@ PROJECT (gpc C)
 	ELSE(GSL_FOUND)
 		MESSAGE(ERROR "GSL not found.")
 	ENDIF(GSL_FOUND)
+
+SET(CMAKE_C_FLAGS "-ggdb -Wall -std=c99 -pedantic")
 
 ADD_LIBRARY(gpc STATIC gpc.c gpc_utils.c)
 TARGET_LINK_LIBRARIES(gpc ${GSL_LIBRARIES})

@@ -19,6 +19,10 @@
 #include <math.h>
 #include "gpc.h"
 
+#ifndef M_PI
+#define M_PI 3.1415926535897932385
+#endif
+
 #define deg2rad(x) (x*M_PI/180)
 
 int main() {

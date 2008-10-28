@@ -1,4 +1,4 @@
-// GPC: A library for the solution of General Point Correspondence problems.
+/* GPC: A library for the solution of General Point Correspondence problems.
 // Copyright (C) 2006 Andrea Censi (andrea at censi dot org)
 
 // This program is free software; you can redistribute it and/or
@@ -13,9 +13,13 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.*/
 
 #include <math.h>
+#ifndef M_PI
+#define M_PI 3.1415926535897932385
+#endif
+
 
 #include "gpc.h"
 #include "gpc_utils.h"
@@ -80,18 +84,18 @@ int gpc_solve_valid(int K, const struct gpc_corr*c, int*valid, double *x_out) {
 	M(mS,2,2); M(mSa,2,2);
 
 	 
-	//	mS = mD - mB.trans * mA.inv * mB;
-	// temp22b = inv(A)
+	/*	mS = mD - mB.trans * mA.inv * mB;*/
+	/* temp22b = inv(A)*/
 	m_inv(mA, temp22b); 
-	// temp22c = inv(A) * mB
+	/* temp22c = inv(A) * mB */
 	m_mult(temp22b, mB, temp22c);
-	// temp22 = mB'
+	/* temp22 = mB' */
 	m_trans(mB, temp22); 
 	m_mult(temp22, temp22c, temp22b); 
 	m_scale(-1.0,temp22b);
 	m_add(mD,temp22b,mS);
 	
-	// mSa = mS.inv * mS.det;
+	/* mSa = mS.inv * mS.det; */
 	m_inv(mS, mSa);
 	m_scale(m_det(mS), mSa);
 	
@@ -139,7 +143,7 @@ int gpc_solve_valid(int K, const struct gpc_corr*c, int*valid, double *x_out) {
 
 	double l[3] = {m_det(mS), 2*gmg(mS,0,0)+2*gmg(mS,1,1), 4};
 	
-	// q = p - l^2
+	/* q = p - l^2 */
 	double q[5] = {p[0]-(l[0]*l[0]), p[1]-(2*l[1]*l[0]), 
 		p[2]-(l[1]*l[1]+2*l[0]*l[2]), -(2*l[2]*l[1]), -(l[2]*l[2])};
 	
