@@ -1,4 +1,11 @@
 
+Changelog
+=========
+
+2008: fixed serious bug in C version
+2007: first revision
+
+
 C version
 =========
 

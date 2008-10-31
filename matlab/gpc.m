@@ -41,10 +41,11 @@ function res = gpc(corr)
 
 	% Find largest real root of Ptot
 	r = roots(Ptot);
-	lambda = 0;
+	lambda = 0; found = 0;
 	for i=1:4
-		if isreal(r(i)) & (r(i)>0)
+		if isreal(r(i)) & (not(found) | r(i)>0)
 			lambda = max(lambda, r(i));
+			found = 1;
 		end
 	end
 	
