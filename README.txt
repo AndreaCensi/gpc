@@ -1,9 +1,8 @@
-
 Changelog
 =========
 
-2008: fixed serious bug in C version
-2007: first revision
+Oct 2008: fixed serious bug which affected the estimate.
+Sep 2007: first revision.
 
 
 C version
